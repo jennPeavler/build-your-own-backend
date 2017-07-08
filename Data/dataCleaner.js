@@ -1,24 +1,39 @@
-const fs = require('fs');
-const csv = require('csvtojson');
+const xlsxj = require('xlsx-to-json');
+const malnutritionJsonArray = require('./CleanData/child-malnutrition.json');
 
-const convertCsvToTextFile = (path, data) => {
-  fs.writeFile(path, JSON.stringify(data, null, 2), (err) => {
-    if (err) {
-      console.error('Error:', err.message);
-    } else {
-      console.log(`Successful Write to ${path}`);
-    }
-  });
-};
+xlsxj({
+  input: './Data/RawData/child-malnutrition.xlsx',
+  output: './Data/CleanData/child-malnutrition.json',
+}, (err, result) => {
+  if (err) {
+    console.error(err);
+  } else {
+    console.log('Successfuly converted child-malnutrition.xlsx to json file');
+  }
+});
 
-csv().fromFile('./RawData/child_malnutrition.csv')
-  .on('end_parsed', (jsonArrObj) => {
-    return convertCsvToTextFile('./CleanData/child_malnutrition.txt', jsonArrObj);
-  })
-  .on('error', (err) => {
-    console.log('Error while converting child_malnutrition.csv to txt file');
-    console.log(err);
-  })
-  .on('done', () => {
-    console.log('child_malnutrition.csv converted to text file');
-  });
+const headers = malnutritionJsonArray.shift();
+
+const countryData = malnutritionJsonArray.reduce((countriesArr, dataPoint) => {
+  const countryObj = {};
+  countryObj.name = dataPoint['Country and areas'];
+  countryObj.iso_code = dataPoint['ISO code'];
+  countryObj.region = dataPoint[''];
+  countryObj.income_group = dataPoint['World Bank'];
+  countriesArr.push(countryObj);
+  return countriesArr;
+}, []);
+
+const malnutritionData = malnutritionJsonArray.reduce((malnutritionArr, dataPoint) => {
+  const malnutritionObj = {};
+  malnutritionObj.year = dataPoint['Year*'];
+  malnutritionObj.under_5_population = dataPoint['Under 5 population (000s)'];
+  malnutritionObj.sample_size = dataPoint['Survey sample size (N)'];
+  malnutritionObj.severe_wasting = dataPoint['Severe wasting'];
+  malnutritionObj.wasting = dataPoint.Wasting;
+  malnutritionObj.overweight = dataPoint.Overweight;
+  malnutritionObj.stunting = dataPoint.Stunting;
+  malnutritionObj.underweight = dataPoint.Underweight;
+  malnutritionArr.push(malnutritionObj);
+  return malnutritionArr;
+}, []);

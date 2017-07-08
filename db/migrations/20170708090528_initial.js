@@ -2,11 +2,10 @@ exports.up = (knex, Promise) => {
   return Promise.all([
     knex.schema.createTable('countries', (table) => {
       table.increments('id').primary();
-      table.string('country and areas');
-      table.string('iso code');
+      table.string('name');
+      table.string('iso_code');
       table.string('region');
-      table.string('sub-region');
-      table.string('income group');
+      table.string('income_group');
       table.timestamps(true, true);
     }),
 
@@ -16,9 +15,9 @@ exports.up = (knex, Promise) => {
       table.foreign('country_id')
       .references('countries.id');
       table.integer('year').unsigned();
-      table.integer('under 5 population').unsigned();
-      table.integer('sample size').unsigned();
-      table.integer('severe wasting').unsigned();
+      table.integer('under_5_population').unsigned();
+      table.integer('sample_size').unsigned();
+      table.integer('severe_wasting').unsigned();
       table.integer('wasting').unsigned();
       table.integer('overweight').unsigned();
       table.integer('stunting').unsigned();
