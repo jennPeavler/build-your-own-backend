@@ -15,12 +15,18 @@ xlsxj({
 const headers = malnutritionJsonArray.shift();
 
 const countryData = malnutritionJsonArray.reduce((countriesArr, dataPoint) => {
-  const countryObj = {};
-  countryObj.name = dataPoint['Country and areas'];
-  countryObj.iso_code = dataPoint['ISO code'];
-  countryObj.region = dataPoint[''];
-  countryObj.income_group = dataPoint['World Bank'];
-  countriesArr.push(countryObj);
+  const duplicate = countriesArr.some((o) => {
+    return o.name === dataPoint['Country and areas'];
+  });
+
+  if (!duplicate) {
+    const countryObj = {};
+    countryObj.name = dataPoint['Country and areas'];
+    countryObj.iso_code = dataPoint['ISO code'];
+    countryObj.region = dataPoint[''];
+    countryObj.income_group = dataPoint['World Bank'];
+    countriesArr.push(countryObj);
+  }
   return countriesArr;
 }, []);
 
@@ -37,3 +43,5 @@ const malnutritionData = malnutritionJsonArray.reduce((malnutritionArr, dataPoin
   malnutritionArr.push(malnutritionObj);
   return malnutritionArr;
 }, []);
+
+module.exports = { countryData, malnutritionData };
