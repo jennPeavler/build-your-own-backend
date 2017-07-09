@@ -32,6 +32,7 @@ const countryData = malnutritionJsonArray.reduce((countriesArr, dataPoint) => {
 
 const malnutritionData = malnutritionJsonArray.reduce((malnutritionArr, dataPoint) => {
   const malnutritionObj = {};
+  malnutritionObj.country_name = dataPoint['Country and areas'];
   malnutritionObj.year = dataPoint['Year*'];
   malnutritionObj.under_5_population = dataPoint['Under 5 population (000s)'];
   malnutritionObj.sample_size = dataPoint['Survey sample size (N)'];
@@ -43,5 +44,7 @@ const malnutritionData = malnutritionJsonArray.reduce((malnutritionArr, dataPoin
   malnutritionArr.push(malnutritionObj);
   return malnutritionArr;
 }, []);
+
+console.log(malnutritionData);
 
 module.exports = { countryData, malnutritionData };

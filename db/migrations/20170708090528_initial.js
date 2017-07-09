@@ -2,7 +2,7 @@ exports.up = (knex, Promise) => {
   return Promise.all([
     knex.schema.createTable('countries', (table) => {
       table.increments('id').primary();
-      table.string('name');
+      table.string('name').unique();
       table.string('iso_code');
       table.string('region');
       table.string('income_group');
@@ -11,17 +11,16 @@ exports.up = (knex, Promise) => {
 
     knex.schema.createTable('yearly_malnutrition_data', (table) => {
       table.increments('id').primary();
-      table.integer('country_id').unsigned();
-      table.foreign('country_id')
-      .references('countries.id');
-      table.integer('year').unsigned();
-      table.integer('under_5_population').unsigned();
-      table.integer('sample_size').unsigned();
-      table.integer('severe_wasting').unsigned();
-      table.integer('wasting').unsigned();
-      table.integer('overweight').unsigned();
-      table.integer('stunting').unsigned();
-      table.integer('underweight').unsigned();
+      table.string('country_name');
+      table.foreign('country_name');
+      table.string('year');
+      table.string('under_5_population');
+      table.string('sample_size');
+      table.string('severe_wasting');
+      table.string('wasting');
+      table.string('overweight');
+      table.string('stunting');
+      table.string('underweight');
       table.timestamps(true, true);
     }),
   ]);
