@@ -9,7 +9,7 @@ exports.up = (knex, Promise) => {
       table.timestamps(true, true);
     }),
 
-    knex.schema.createTable('yearly_malnutrition_data', (table) => {
+    knex.schema.createTable('malnutrition_data', (table) => {
       table.increments('id').primary();
       table.string('country_name');
       table.foreign('country_name');
@@ -28,7 +28,7 @@ exports.up = (knex, Promise) => {
 
 exports.down = (knex, Promise) => {
   return Promise.all([
-    knex.schema.dropTable('yearly_malnutrition_data'),
+    knex.schema.dropTable('malnutrition_data'),
     knex.schema.dropTable('countries'),
   ]);
 };
