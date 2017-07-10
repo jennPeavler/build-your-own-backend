@@ -37,7 +37,7 @@ const postNewCountry = (req, res) => {
   database('countries').insert({ name, iso_code, region, income_group }, 'id')
   .then((countryIndex) => {
     countryIndex.length ? res.status(201).send('Country recorded in database')
-    : res.status(422).send('Unable to record country into database');
+    : res.status(422).send('Unable to record country into database, check if the data column exists');
   })
   .catch(error => res.status(500).send(error));
 };
@@ -63,7 +63,7 @@ const postNewMalnutritionData = (req, res) => {
       underweight }, 'id')
   .then((dataIndex) => {
     dataIndex.length ? res.status(201).send('Malnutrition data recorded in database')
-    : res.status(422).send('Unable to record malnutrition data into database');
+    : res.status(422).send('Unable to record malnutrition data into database, check if the data column exists');
   })
   .catch(error => res.status(500).send(error));
 };
