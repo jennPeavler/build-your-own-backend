@@ -30,7 +30,7 @@ const malnutritionsData = (knex) => {
             overweight,
             stunting,
             underweight } = dataPoint;
-    return knex('yearly_malnutrition_data').insert({
+    return knex('malnutrition_data').insert({
       country_name,
       year,
       under_5_population,
@@ -46,6 +46,7 @@ const malnutritionsData = (knex) => {
 
 exports.seed = (knex, Promise) => {
   return knex('countries').del()
+    .then(() => knex('malnutrition_data').del())
     .then(() => {
       const countries = countriesData(knex);
       const malnutrition = malnutritionsData(knex);

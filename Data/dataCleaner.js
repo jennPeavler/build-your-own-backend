@@ -45,6 +45,4 @@ const malnutritionData = malnutritionJsonArray.reduce((malnutritionArr, dataPoin
   return malnutritionArr;
 }, []);
 
-console.log(malnutritionData);
-
 module.exports = { countryData, malnutritionData };
