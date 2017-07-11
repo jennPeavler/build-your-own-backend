@@ -68,10 +68,43 @@ const postNewMalnutritionData = (req, res) => {
   .catch(error => res.status(500).send(error));
 };
 
+const patchCountry = (req, res) => {
+  const { name } = req.params;
+  const updates = Object.keys(req.body);
+
+  if (!req.body.name) {
+    updates.forEach((update) => {
+      database('countries').where('name', name)
+      .update({ [update]: req.body[update] })
+      .then((data) => {
+        data ? res.status(201).send('Data updated') : res.status(422).send('unable to update data');
+      })
+      .catch(error => res.status(500).send(error));
+    });
+  } else {
+    database('countries').where('name', name)
+    .update({ name: req.body.name })
+    .then(() => {
+      const index = updates.indexOf('name');
+
+      updates.splice(index, 1);
+      updates.forEach((update) => {
+        database('countries').where('name', req.body.name)
+        .update({ [update]: req.body[update] })
+        .then((data) => {
+          res.status(201).send('Data updated');
+        });
+      });
+    })
+    .catch(error => res.status(500).send(error));
+  }
+};
+
 module.exports = {
   getOneResource,
   getCountryMalnutritionData,
   getYearlyMalnutritionData,
   postNewCountry,
   postNewMalnutritionData,
+  patchCountry,
 };

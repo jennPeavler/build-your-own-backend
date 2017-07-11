@@ -11,5 +11,7 @@ router.get('/yearly/malnutrition_data/:year', api.getYearlyMalnutritionData);
 router.post('/countries', api.postNewCountry);
 router.post('/malnutrition_data', api.postNewMalnutritionData);
 
+router.patch('/countries/:name', api.patchCountry);
+
 
 module.exports = router;
