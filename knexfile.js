@@ -1,6 +1,16 @@
 // Update with your config settings.
 
 module.exports = {
+  test: {
+    client: 'pg',
+    connection: 'postgres://localhost/child_malnutrition_test',
+    migrations: {
+      directory: './db/migrations/tests',
+    },
+    seeds: {
+      directory: './db/seeds/tests',
+    },
+  },
 
   development: {
     client: 'pg',

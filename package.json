@@ -1,10 +1,10 @@
 {
   "name": "byob",
   "version": "1.0.0",
-  "description": "",
+  "description": "collection of world child malnutrition data provided by Unicef",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha tests/routes.spec.js",
     "start": "nodemon Server/server.js",
     "lint": "./node_modules/.bin/eslint ./"
   },
@@ -13,6 +13,8 @@
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.17.2",
+    "chai": "^4.0.2",
+    "chai-http": "^3.0.0",
     "express": "^4.15.3",
     "knex": "^0.13.0",
     "pg": "^6.4.0",
