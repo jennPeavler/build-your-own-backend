@@ -4,21 +4,20 @@ const database = require('knex')(configuration);
 
 const getOneResource = (req, res) => {
   const path = req.route.path.substring(1);
-  // if (req.query) {
-  //   console.log('hit req query');
-  //   const filter = Object.keys(req.query);
-  //   database(`${path}`).where({ [filter]: req.query[filter] }).select()
-  //   .then((data) => {
-  //     data.length ? res.status(200).json(data) : res.status(404).send('Data was not found');
-  //   })
-  //   .catch(error => res.status(500).send(error));
-  // } else {
-  database(`${path}`).select()
-  .then((data) => {
-    data.length ? res.status(200).json(data) : res.status(404).send('No data exists in this table');
-  })
-  .catch(error => res.status(500).send(error));
-  // }
+  const { region } = req.query;
+  if (region) {
+    database(`${path}`).where({ region }).select()
+    .then((data) => {
+      data.length ? res.status(200).json(data) : res.status(404).send('Data was not found');
+    })
+    .catch(error => res.status(500).send(error));
+  } else {
+    database(`${path}`).select()
+    .then((data) => {
+      data.length ? res.status(200).json(data) : res.status(404).send('No data exists in this table');
+    })
+    .catch(error => res.status(500).send(error));
+  }
 };
 
 const getCountryMalnutritionData = (req, res) => {
