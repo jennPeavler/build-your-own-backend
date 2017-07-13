@@ -415,4 +415,37 @@ describe('API Routes', () => {
       });
     });
   });
+
+  describe('DELETE deleteRequests.deleteMalnutritionData api function', () => {
+    it('should delete malnutrition data if user has authorization and hits endpoint', (done) => {
+      chai.request(server)
+      .get('/api/v1/malnutrition_data')
+      .end((error, response) => {
+        response.body.length.should.equal(3);
+        chai.request(server)
+        .delete('/api/v1/malnutrition_data/DEXLAND/2017')
+        .set('Authorization', process.env.TOKEN)
+        .end((err, response) => {
+          response.should.have.status(204);
+          chai.request(server)
+          .get('/api/v1/malnutrition_data')
+          .end((error, response) => {
+            response.body.length.should.equal(2);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should return a 404 and a helpful message if user does not have authorization to delete malnutrition_data data', (done) => {
+      chai.request(server)
+      .delete('/api/v1/malnutrition_data/DEXLAND/2017')
+      .end((err, response) => {
+        response.should.have.status(403);
+        const failureResponse = JSON.parse(response.text);
+        failureResponse.message.should.equal('You must be authorized to hit this end point');
+        done();
+      });
+    });
+  });
 });
