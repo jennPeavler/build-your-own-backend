@@ -132,6 +132,7 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.body.length.should.equal(1);
         response.body[0].id.should.equal(1);
+        response.body[0].country_name.should.equal('SMELAND');
         response.body[0].year.should.equal('1980');
         response.body[0].under_5_population.should.equal('3000');
         response.body[0].sample_size.should.equal('300');
@@ -151,6 +152,7 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.body.length.should.equal(1);
         response.body[0].id.should.equal(1);
+        response.body[0].country_name.should.equal('SMELAND');
         response.body[0].year.should.equal('1980');
         response.body[0].under_5_population.should.equal('3000');
         response.body[0].sample_size.should.equal('300');
@@ -172,6 +174,42 @@ describe('API Routes', () => {
         .end((err, response) => {
           response.should.have.status(404);
           response.error.text.should.equal('No malnutrition data found for that country');
+          done();
+        });
+      });
+    });
+  });
+
+  describe('GET getRequests.getYearlyMalnutritionData api function', () => {
+    it('should return the malnutrition_data for a specified year', (done) => {
+      chai.request(server)
+      .get('/api/v1/yearly/malnutrition_data/1980')
+      .end((err, response) => {
+        response.should.have.status(200);
+        response.body.length.should.equal(1);
+        response.body[0].id.should.equal(1);
+        response.body[0].country_name.should.equal('SMELAND');
+        response.body[0].year.should.equal('1980');
+        response.body[0].under_5_population.should.equal('3000');
+        response.body[0].sample_size.should.equal('300');
+        response.body[0].severe_wasting.should.equal('30');
+        response.body[0].wasting.should.equal('3');
+        response.body[0].overweight.should.equal('10');
+        response.body[0].stunting.should.equal('20');
+        response.body[0].underweight.should.equal('30');
+        done();
+      });
+    });
+
+    it('should return a 404 and helpful error message if no malnutrition data for that year is found', (done) => {
+      database.migrate.rollback()
+      .then(() => database.migrate.latest())
+      .then(() => {
+        chai.request(server)
+        .get('/api/v1/yearly/malnutrition_data/1742')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.error.text.should.equal('No malnutrition data found for that year');
           done();
         });
       });
