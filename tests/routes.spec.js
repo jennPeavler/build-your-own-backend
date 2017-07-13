@@ -229,7 +229,6 @@ describe('API Routes', () => {
         income_group: 'quarterly',
       })
       .end((err, response) => {
-        console.log(err);
         response.should.have.status(201);
         response.text.should.equal('Country recorded in table');
         response.request._data.should.have.property('id');
@@ -255,6 +254,70 @@ describe('API Routes', () => {
         region: 'fo',
         income_group: 'fum',
       })
+      .end((err, response) => {
+        response.should.have.status(403);
+        const failureResponse = JSON.parse(response.text);
+        failureResponse.message.should.equal('You must be authorized to hit this end point');
+        done();
+      });
+    });
+  });
+
+  describe('POST postRequests.postNewMalnutritionData api function', () => {
+    it('should insert new malnutritional data point into database if user has authorization and hits enpoint', (done) => {
+      chai.request(server)
+      .post('/api/v1/malnutrition_data')
+      .set('Authorization', process.env.TOKEN)
+      .send({ id: 4,
+        country_name: 'SMELAND',
+        year: '1998',
+        under_5_population: '9999',
+        sample_size: '999',
+        severe_wasting: '99',
+        wasting: '9',
+        overweight: '99',
+        stunting: '99',
+        underweight: '99' })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.text.should.equal('Malnutrition data recorded in database');
+        response.request._data.should.have.property('id');
+        response.request._data.id.should.equal(4);
+        response.request._data.should.have.property('country_name');
+        response.request._data.country_name.should.equal('SMELAND');
+        response.request._data.should.have.property('year');
+        response.request._data.year.should.equal('1998');
+        response.request._data.should.have.property('under_5_population');
+        response.request._data.under_5_population.should.equal('9999');
+        response.request._data.should.have.property('sample_size');
+        response.request._data.sample_size.should.equal('999');
+        response.request._data.should.have.property('severe_wasting');
+        response.request._data.severe_wasting.should.equal('99');
+        response.request._data.should.have.property('wasting');
+        response.request._data.wasting.should.equal('9');
+        response.request._data.should.have.property('overweight');
+        response.request._data.overweight.should.equal('99');
+        response.request._data.should.have.property('stunting');
+        response.request._data.stunting.should.equal('99');
+        response.request._data.should.have.property('underweight');
+        response.request._data.underweight.should.equal('99');
+        done();
+      });
+    });
+
+    it('should return a 404 and a helpful message if user does not have authorization to post malnutrition data', (done) => {
+      chai.request(server)
+      .post('/api/v1/malnutrition_data')
+      .send({ id: 4,
+        country_name: 'fee',
+        year: 'fi',
+        under_5_population: 'fo',
+        sample_size: 'fum',
+        severe_wasting: 'being',
+        wasting: 'mean',
+        overweight: 'is',
+        stunting: 'hum',
+        underweight: 'dumb' })
       .end((err, response) => {
         response.should.have.status(403);
         const failureResponse = JSON.parse(response.text);
