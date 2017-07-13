@@ -326,4 +326,41 @@ describe('API Routes', () => {
       });
     });
   });
+
+  describe('PATCH patchRequests.patchCountry api function', () => {
+    it('should update country data point if user has authorization and hits enpoint', (done) => {
+      chai.request(server)
+      .patch('/api/v1/countries/SMELAND')
+      .set('Authorization', process.env.TOKEN)
+      .send({ region: 'pinland' })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.text.should.equal('Data updated');
+        response.request._data.should.have.property('region');
+        response.request._data.region.should.equal('pinland');
+      });
+      chai.request(server)
+      .get('/api/v1/countries')
+      .end((err, response) => {
+        response.should.have.status(200);
+        arrayContains(response, 'id', 1).should.include(true);
+        arrayContains(response, 'name', 'SMELAND').should.include(true);
+        arrayContains(response, 'iso_code', 'sme').should.include(true);
+        arrayContains(response, 'region', 'junglelang').should.not.include(true);
+        done();
+      });
+    });
+
+    it('should return a 404 and a helpful message if user does not have authorization to update country data', (done) => {
+      chai.request(server)
+      .patch('/api/v1/countries/SMELAND')
+      .send({ region: 'pinland' })
+      .end((err, response) => {
+        response.should.have.status(403);
+        const failureResponse = JSON.parse(response.text);
+        failureResponse.message.should.equal('You must be authorized to hit this end point');
+        done();
+      });
+    });
+  });
 });
