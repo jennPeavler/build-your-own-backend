@@ -338,15 +338,6 @@ describe('API Routes', () => {
         response.text.should.equal('Data updated');
         response.request._data.should.have.property('region');
         response.request._data.region.should.equal('pinland');
-      });
-      chai.request(server)
-      .get('/api/v1/countries')
-      .end((err, response) => {
-        response.should.have.status(200);
-        arrayContains(response, 'id', 1).should.include(true);
-        arrayContains(response, 'name', 'SMELAND').should.include(true);
-        arrayContains(response, 'iso_code', 'sme').should.include(true);
-        arrayContains(response, 'region', 'junglelang').should.not.include(true);
         done();
       });
     });
@@ -355,6 +346,34 @@ describe('API Routes', () => {
       chai.request(server)
       .patch('/api/v1/countries/SMELAND')
       .send({ region: 'pinland' })
+      .end((err, response) => {
+        response.should.have.status(403);
+        const failureResponse = JSON.parse(response.text);
+        failureResponse.message.should.equal('You must be authorized to hit this end point');
+        done();
+      });
+    });
+  });
+
+  describe('PATCH patchRequests.patchMalnutritionData api function', () => {
+    it('should update malnutrition data point if user has authorization and hits enpoint', (done) => {
+      chai.request(server)
+      .patch('/api/v1/malnutrition_data/SMELAND/1980')
+      .set('Authorization', process.env.TOKEN)
+      .send({ under_5_population: '3333' })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.text.should.equal('Data updated');
+        response.request._data.should.have.property('under_5_population');
+        response.request._data.under_5_population.should.equal('3333');
+        done();
+      });
+    });
+
+    it('should return a 404 and a helpful message if user does not have authorization to update malnutrition data', (done) => {
+      chai.request(server)
+      .patch('/api/v1/malnutrition_data/SMELAND/1980')
+      .send({ under_5_population: '9999' })
       .end((err, response) => {
         response.should.have.status(403);
         const failureResponse = JSON.parse(response.text);
