@@ -1,4 +1,5 @@
 process.env.NODE_ENV = 'test';
+process.env.TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVU0VSTkFNRSI6InN2ZW4iLCJQQVNTV09SRCI6InBlYXZsZXJkZW4ifQ.SO-V6i8bwtVk5AdVgQmOo5gJ6UbdzoNynepKVFXuHRU';
 const environment = 'test';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
@@ -212,6 +213,53 @@ describe('API Routes', () => {
           response.error.text.should.equal('No malnutrition data found for that year');
           done();
         });
+      });
+    });
+  });
+
+  describe('POST postRequests.postNewCountry api function', () => {
+    it.skip('should insert new country into database if user has authorization and hits enpoint', (done) => {
+      chai.request(server)
+      .post('/api/v1/countries')
+      .set('Authorization', process.env.TOKEN)
+      .send({ id: 4,
+        name: 'PINLANDIA',
+        iso_code: 'PIN',
+        region: 'bartown',
+        income_group: 'quarterly',
+      })
+      .end((err, response) => {
+        console.log(err);
+        response.should.have.status(201);
+        response.text.should.equal('Country recorded in table');
+        response.request._data.should.have.property('id');
+        response.request._data.id.should.equal(4);
+        response.request._data.should.have.property('name');
+        response.request._data.name.should.equal('PINLANDIA');
+        response.request._data.should.have.property('iso_code');
+        response.request._data.iso_code.should.equal('PIN');
+        response.request._data.should.have.property('region');
+        response.request._data.region.should.equal('bartown');
+        response.request._data.should.have.property('income_group');
+        response.request._data.income_group.should.equal('quarterly');
+        done();
+      });
+    });
+
+    it('should return a 404 and a helpful message if user does not have authorization to post country', (done) => {
+      chai.request(server)
+      .post('/api/v1/countries')
+      .send({ id: 5,
+        name: 'fee',
+        iso_code: 'fi',
+        region: 'fo',
+        income_group: 'fum',
+      })
+      .end((err, response) => {
+        response.should.have.status(403);
+        const failureResponse = JSON.parse(response.text);
+        failureResponse.message.should.equal('You must be authorized to hit this end point');
+        done();
       });
     });
   });

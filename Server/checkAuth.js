@@ -21,7 +21,7 @@ const checkAuth = (request, response, next) => {
       if (error) {
         return response.status(403).send({
           success: false,
-          messgae: 'Invalid authorization token',
+          message: 'Invalid authorization token',
         });
       } else {
         request.decoded = decoded;
@@ -31,7 +31,7 @@ const checkAuth = (request, response, next) => {
   } else {
     return response.status(403).send({
       success: false,
-      messgae: 'You must be authorized to hit this end point',
+      message: 'You must be authorized to hit this end point',
     });
   }
 };
