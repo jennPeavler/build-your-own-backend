@@ -218,7 +218,7 @@ describe('API Routes', () => {
   });
 
   describe('POST postRequests.postNewCountry api function', () => {
-    it.skip('should insert new country into database if user has authorization and hits enpoint', (done) => {
+    it('should insert new country into database if user has authorization and hits enpoint', (done) => {
       chai.request(server)
       .post('/api/v1/countries')
       .set('Authorization', process.env.TOKEN)

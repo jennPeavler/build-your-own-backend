@@ -1,7 +1,7 @@
 exports.up = (knex, Promise) => {
   return Promise.all([
     knex.schema.createTable('countries', (table) => {
-      table.increments('id').primary();
+      table.integer('id').unsigned();
       table.string('name').unique();
       table.string('iso_code');
       table.string('region');
@@ -10,7 +10,7 @@ exports.up = (knex, Promise) => {
     }),
 
     knex.schema.createTable('malnutrition_data', (table) => {
-      table.increments('id').primary();
+      table.integer('id').unsigned();
       table.string('country_name');
       table.foreign('country_name');
       table.string('year');
