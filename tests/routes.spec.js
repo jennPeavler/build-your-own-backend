@@ -29,7 +29,7 @@ describe('API Routes', () => {
     .then(() => done());
   });
 
-  describe('GET getOneResource api function', () => {
+  describe('GET getRequests.getOneResource api function', () => {
     it('should return all countries if user hits countries api endpoint', (done) => {
       chai.request(server)
       .get('/api/v1/countries')
@@ -37,17 +37,17 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.body.length.should.equal(3);
         arrayContains(response, 'id', 1).should.include(true);
-        arrayContains(response, 'name', 'smeland').should.include(true);
+        arrayContains(response, 'name', 'SMELAND').should.include(true);
         arrayContains(response, 'iso_code', 'sme').should.include(true);
         arrayContains(response, 'region', 'jungleland').should.include(true);
         arrayContains(response, 'income_group', 'no-money').should.include(true);
         arrayContains(response, 'id', 2).should.include(true);
-        arrayContains(response, 'name', 'yuvaland').should.include(true);
+        arrayContains(response, 'name', 'YUVALAND').should.include(true);
         arrayContains(response, 'iso_code', 'yuv').should.include(true);
         arrayContains(response, 'region', 'coconut-trees').should.include(true);
         arrayContains(response, 'income_group', 'rich').should.include(true);
         arrayContains(response, 'id', 3).should.include(true);
-        arrayContains(response, 'name', 'dexland').should.include(true);
+        arrayContains(response, 'name', 'DEXLAND').should.include(true);
         arrayContains(response, 'iso_code', 'dex').should.include(true);
         arrayContains(response, 'region', 'bushes').should.include(true);
         arrayContains(response, 'income_group', 'bones').should.include(true);
@@ -62,7 +62,7 @@ describe('API Routes', () => {
         response.should.have.status(200);
         response.body.length.should.equal(3);
         arrayContains(response, 'id', 1).should.include(true);
-        arrayContains(response, 'country_name', 'smeland').should.include(true);
+        arrayContains(response, 'country_name', 'SMELAND').should.include(true);
         arrayContains(response, 'year', '1980').should.include(true);
         arrayContains(response, 'under_5_population', '3000').should.include(true);
         arrayContains(response, 'sample_size', '300').should.include(true);
@@ -72,7 +72,7 @@ describe('API Routes', () => {
         arrayContains(response, 'stunting', '20').should.include(true);
         arrayContains(response, 'underweight', '30').should.include(true);
         arrayContains(response, 'id', 2).should.include(true);
-        arrayContains(response, 'country_name', 'yuvaland').should.include(true);
+        arrayContains(response, 'country_name', 'YUVALAND').should.include(true);
         arrayContains(response, 'year', '1984').should.include(true);
         arrayContains(response, 'under_5_population', '9000').should.include(true);
         arrayContains(response, 'sample_size', '900').should.include(true);
@@ -82,7 +82,7 @@ describe('API Routes', () => {
         arrayContains(response, 'stunting', '90').should.include(true);
         arrayContains(response, 'underweight', '90').should.include(true);
         arrayContains(response, 'id', 3).should.include(true);
-        arrayContains(response, 'country_name', 'dexland').should.include(true);
+        arrayContains(response, 'country_name', 'DEXLAND').should.include(true);
         arrayContains(response, 'year', '2017').should.include(true);
         arrayContains(response, 'under_5_population', '6000').should.include(true);
         arrayContains(response, 'sample_size', '600').should.include(true);
@@ -118,6 +118,60 @@ describe('API Routes', () => {
         .end((err, response) => {
           response.should.have.status(404);
           response.error.text.should.equal('No data exists in this table');
+          done();
+        });
+      });
+    });
+  });
+
+  describe('GET getRequests.getCountryMalnutritionData api function', () => {
+    it('should return the malnutrition_data for a specified country', (done) => {
+      chai.request(server)
+      .get('/api/v1/countries/malnutrition_data/smeland')
+      .end((err, response) => {
+        response.should.have.status(200);
+        response.body.length.should.equal(1);
+        response.body[0].id.should.equal(1);
+        response.body[0].year.should.equal('1980');
+        response.body[0].under_5_population.should.equal('3000');
+        response.body[0].sample_size.should.equal('300');
+        response.body[0].severe_wasting.should.equal('30');
+        response.body[0].wasting.should.equal('3');
+        response.body[0].overweight.should.equal('10');
+        response.body[0].stunting.should.equal('20');
+        response.body[0].underweight.should.equal('30');
+        done();
+      });
+    });
+
+    it('should be case insensitive', (done) => {
+      chai.request(server)
+      .get('/api/v1/countries/malnutrition_data/sMELand')
+      .end((err, response) => {
+        response.should.have.status(200);
+        response.body.length.should.equal(1);
+        response.body[0].id.should.equal(1);
+        response.body[0].year.should.equal('1980');
+        response.body[0].under_5_population.should.equal('3000');
+        response.body[0].sample_size.should.equal('300');
+        response.body[0].severe_wasting.should.equal('30');
+        response.body[0].wasting.should.equal('3');
+        response.body[0].overweight.should.equal('10');
+        response.body[0].stunting.should.equal('20');
+        response.body[0].underweight.should.equal('30');
+        done();
+      });
+    });
+
+    it('should return a 404 and helpful error message if no malnutrition data for that country is found', (done) => {
+      database.migrate.rollback()
+      .then(() => database.migrate.latest())
+      .then(() => {
+        chai.request(server)
+        .get('/api/v1/countries/malnutrition_data/zzzzzzzzzzz')
+        .end((err, response) => {
+          response.should.have.status(404);
+          response.error.text.should.equal('No malnutrition data found for that country');
           done();
         });
       });
