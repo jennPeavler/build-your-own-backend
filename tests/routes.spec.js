@@ -10,6 +10,14 @@ const should = chai.should();
 
 chai.use(chaiHttp);
 
+const arrayContains = ((response, key, value) => {
+  const answerArray = [];
+  response.body.forEach((dataPoint) => {
+    answerArray.push(dataPoint[key] === value);
+  });
+  return answerArray;
+});
+
 describe('API Routes', () => {
   before((done) => {
     database.migrate.latest()
@@ -28,21 +36,21 @@ describe('API Routes', () => {
       .end((err, response) => {
         response.should.have.status(200);
         response.body.length.should.equal(3);
-        response.body[0].id.should.equal(1);
-        response.body[0].name.should.equal('smeland');
-        response.body[0].iso_code.should.equal('sme');
-        response.body[0].region.should.equal('jungleland');
-        response.body[0].income_group.should.equal('no-money');
-        response.body[1].id.should.equal(2);
-        response.body[1].name.should.equal('yuvaland');
-        response.body[1].iso_code.should.equal('yuv');
-        response.body[1].region.should.equal('coconut-trees');
-        response.body[1].income_group.should.equal('rich');
-        response.body[2].id.should.equal(3);
-        response.body[2].name.should.equal('dexland');
-        response.body[2].iso_code.should.equal('dex');
-        response.body[2].region.should.equal('bushes');
-        response.body[2].income_group.should.equal('bones');
+        arrayContains(response, 'id', 1).should.include(true);
+        arrayContains(response, 'name', 'smeland').should.include(true);
+        arrayContains(response, 'iso_code', 'sme').should.include(true);
+        arrayContains(response, 'region', 'jungleland').should.include(true);
+        arrayContains(response, 'income_group', 'no-money').should.include(true);
+        arrayContains(response, 'id', 2).should.include(true);
+        arrayContains(response, 'name', 'yuvaland').should.include(true);
+        arrayContains(response, 'iso_code', 'yuv').should.include(true);
+        arrayContains(response, 'region', 'coconut-trees').should.include(true);
+        arrayContains(response, 'income_group', 'rich').should.include(true);
+        arrayContains(response, 'id', 3).should.include(true);
+        arrayContains(response, 'name', 'dexland').should.include(true);
+        arrayContains(response, 'iso_code', 'dex').should.include(true);
+        arrayContains(response, 'region', 'bushes').should.include(true);
+        arrayContains(response, 'income_group', 'bones').should.include(true);
         done();
       });
     });
@@ -53,38 +61,36 @@ describe('API Routes', () => {
       .end((err, response) => {
         response.should.have.status(200);
         response.body.length.should.equal(3);
-        response.body[0].id.should.equal(1);
-        response.body[0].country_name.should.equal('smeland');
-        response.body[0].year.should.equal('1980');
-        response.body[0].under_5_population.should.equal('3000');
-        response.body[0].sample_size.should.equal('300');
-        response.body[0].severe_wasting.should.equal('30');
-        response.body[0].wasting.should.equal('3');
-        response.body[0].overweight.should.equal('10');
-        response.body[0].stunting.should.equal('20');
-        response.body[0].underweight.should.equal('30');
-
-        response.body[1].id.should.equal(2);
-        response.body[1].country_name.should.equal('yuvaland');
-        response.body[1].year.should.equal('1984');
-        response.body[1].under_5_population.should.equal('9000');
-        response.body[1].sample_size.should.equal('900');
-        response.body[1].severe_wasting.should.equal('90');
-        response.body[1].wasting.should.equal('9');
-        response.body[1].overweight.should.equal('90');
-        response.body[1].stunting.should.equal('90');
-        response.body[1].underweight.should.equal('90');
-
-        response.body[2].id.should.equal(3);
-        response.body[2].country_name.should.equal('dexland');
-        response.body[2].year.should.equal('2017');
-        response.body[2].under_5_population.should.equal('6000');
-        response.body[2].sample_size.should.equal('600');
-        response.body[2].severe_wasting.should.equal('60');
-        response.body[2].wasting.should.equal('6');
-        response.body[2].overweight.should.equal('60');
-        response.body[2].stunting.should.equal('60');
-        response.body[2].underweight.should.equal('60');
+        arrayContains(response, 'id', 1).should.include(true);
+        arrayContains(response, 'country_name', 'smeland').should.include(true);
+        arrayContains(response, 'year', '1980').should.include(true);
+        arrayContains(response, 'under_5_population', '3000').should.include(true);
+        arrayContains(response, 'sample_size', '300').should.include(true);
+        arrayContains(response, 'severe_wasting', '30').should.include(true);
+        arrayContains(response, 'wasting', '3').should.include(true);
+        arrayContains(response, 'overweight', '10').should.include(true);
+        arrayContains(response, 'stunting', '20').should.include(true);
+        arrayContains(response, 'underweight', '30').should.include(true);
+        arrayContains(response, 'id', 2).should.include(true);
+        arrayContains(response, 'country_name', 'yuvaland').should.include(true);
+        arrayContains(response, 'year', '1984').should.include(true);
+        arrayContains(response, 'under_5_population', '9000').should.include(true);
+        arrayContains(response, 'sample_size', '900').should.include(true);
+        arrayContains(response, 'severe_wasting', '90').should.include(true);
+        arrayContains(response, 'wasting', '9').should.include(true);
+        arrayContains(response, 'overweight', '90').should.include(true);
+        arrayContains(response, 'stunting', '90').should.include(true);
+        arrayContains(response, 'underweight', '90').should.include(true);
+        arrayContains(response, 'id', 3).should.include(true);
+        arrayContains(response, 'country_name', 'dexland').should.include(true);
+        arrayContains(response, 'year', '2017').should.include(true);
+        arrayContains(response, 'under_5_population', '6000').should.include(true);
+        arrayContains(response, 'sample_size', '600').should.include(true);
+        arrayContains(response, 'severe_wasting', '60').should.include(true);
+        arrayContains(response, 'wasting', '6').should.include(true);
+        arrayContains(response, 'overweight', '60').should.include(true);
+        arrayContains(response, 'stunting', '60').should.include(true);
+        arrayContains(response, 'underweight', '60').should.include(true);
         done();
       });
     });
