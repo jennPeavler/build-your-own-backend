@@ -29,7 +29,7 @@ describe('API Routes', () => {
     .then(() => done());
   });
 
-  describe('GET getOneResource api function', () => {
+  describe('GET getRequests.getOneResource api function', () => {
     it('should return all countries if user hits countries api endpoint', (done) => {
       chai.request(server)
       .get('/api/v1/countries')
@@ -120,6 +120,33 @@ describe('API Routes', () => {
           response.error.text.should.equal('No data exists in this table');
           done();
         });
+      });
+    });
+  });
+
+  describe('GET getRequests.getCountryMalnutritionData api function', () => {
+    it.only('should return the malnutrition_data for a specified country', (done) => {
+      chai.request(server)
+      .get('/api/v1/countries/malnutrition_data/smeland')
+      .end((err, response) => {
+        response.should.have.status(200);
+        response.body.length.should.equal(1);
+        // arrayContains(response, 'id', 1).should.include(true);
+        // arrayContains(response, 'name', 'smeland').should.include(true);
+        // arrayContains(response, 'iso_code', 'sme').should.include(true);
+        // arrayContains(response, 'region', 'jungleland').should.include(true);
+        // arrayContains(response, 'income_group', 'no-money').should.include(true);
+        // arrayContains(response, 'id', 2).should.include(true);
+        // arrayContains(response, 'name', 'yuvaland').should.include(true);
+        // arrayContains(response, 'iso_code', 'yuv').should.include(true);
+        // arrayContains(response, 'region', 'coconut-trees').should.include(true);
+        // arrayContains(response, 'income_group', 'rich').should.include(true);
+        // arrayContains(response, 'id', 3).should.include(true);
+        // arrayContains(response, 'name', 'dexland').should.include(true);
+        // arrayContains(response, 'iso_code', 'dex').should.include(true);
+        // arrayContains(response, 'region', 'bushes').should.include(true);
+        // arrayContains(response, 'income_group', 'bones').should.include(true);
+        done();
       });
     });
   });
