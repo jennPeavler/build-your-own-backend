@@ -382,4 +382,37 @@ describe('API Routes', () => {
       });
     });
   });
+
+  describe('DELETE deleteRequests.deleteCountry api function', () => {
+    it('should delete a country if user has authorization and hits endpoint', (done) => {
+      chai.request(server)
+      .get('/api/v1/countries')
+      .end((error, response) => {
+        response.body.length.should.equal(3);
+        chai.request(server)
+        .delete('/api/v1/countries/DEXLAND')
+        .set('Authorization', process.env.TOKEN)
+        .end((err, response) => {
+          response.should.have.status(204);
+          chai.request(server)
+          .get('/api/v1/countries')
+          .end((error, response) => {
+            response.body.length.should.equal(2);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should return a 404 and a helpful message if user does not have authorization to delete country data', (done) => {
+      chai.request(server)
+      .delete('/api/v1/countries/DEXLAND')
+      .end((err, response) => {
+        response.should.have.status(403);
+        const failureResponse = JSON.parse(response.text);
+        failureResponse.message.should.equal('You must be authorized to hit this end point');
+        done();
+      });
+    });
+  });
 });
