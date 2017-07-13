@@ -96,6 +96,19 @@ describe('API Routes', () => {
       });
     });
 
+    it('should be able to filter countries by region', (done) => {
+      chai.request(server)
+      .get('/api/v1/countries?region=jungleland')
+      .end((err, response) => {
+        arrayContains(response, 'id', 1).should.include(true);
+        arrayContains(response, 'name', 'SMELAND').should.include(true);
+        arrayContains(response, 'iso_code', 'sme').should.include(true);
+        arrayContains(response, 'region', 'jungleland').should.include(true);
+        arrayContains(response, 'income_group', 'no-money').should.include(true);
+        done();
+      });
+    });
+
     it('should return a 404 and helpful error message if no countries are found', (done) => {
       database.migrate.rollback()
       .then(() => database.migrate.latest())
