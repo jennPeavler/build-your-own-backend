@@ -3,7 +3,11 @@ const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
 const postNewCountry = (req, res) => {
-  const { name, iso_code, region, income_group } = req.body;
+  const { region, income_group } = req.body;
+  let { name, iso_code } = req.body;
+  name = name.toUpperCase();
+  iso_code = iso_code.toUpperCase();
+
   database('countries').insert({ name, iso_code, region, income_group }, 'id')
   .then((countryIndex) => {
     countryIndex.length ? res.status(201).send('Country recorded in table')
@@ -13,8 +17,7 @@ const postNewCountry = (req, res) => {
 };
 
 const postNewMalnutritionData = (req, res) => {
-  const { country_name,
-          year,
+  const { year,
           under_5_population,
           sample_size,
           severe_wasting,
@@ -22,6 +25,8 @@ const postNewMalnutritionData = (req, res) => {
           overweight,
           stunting,
           underweight } = req.body;
+  let { country_name } = req.body;
+  country_name = country_name.toUpperCase();
 
   database('malnutrition_data').insert(
     { country_name,

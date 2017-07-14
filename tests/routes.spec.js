@@ -271,6 +271,39 @@ describe('API Routes', () => {
       });
     });
 
+    it('should be case insesnsitive for name and iso_code', (done) => {
+      chai.request(server)
+      .post('/api/v1/countries')
+      .set('Authorization', process.env.TOKEN)
+      .send({ id: 4,
+        name: 'PiNlanDIA',
+        iso_code: 'Pin',
+        region: 'bartown',
+        income_group: 'quarterly',
+      })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.text.should.equal('Country recorded in table');
+        response.request._data.should.have.property('id');
+        response.request._data.id.should.equal(4);
+        response.request._data.should.have.property('name');
+        response.request._data.name.should.equal('PiNlanDIA');
+        response.request._data.should.have.property('iso_code');
+        response.request._data.iso_code.should.equal('Pin');
+        response.request._data.should.have.property('region');
+        response.request._data.region.should.equal('bartown');
+        response.request._data.should.have.property('income_group');
+        response.request._data.income_group.should.equal('quarterly');
+        chai.request(server)
+        .get('/api/v1/countries')
+        .end((err, response) => {
+          arrayContains(response, 'name', 'PINLANDIA').should.include(true);
+          arrayContains(response, 'iso_code', 'PIN').should.include(true);
+          done();
+        });
+      });
+    });
+
     it('should return a 404 and a helpful message if user does not have authorization to post country', (done) => {
       chai.request(server)
       .post('/api/v1/countries')
@@ -328,6 +361,40 @@ describe('API Routes', () => {
         response.request._data.should.have.property('underweight');
         response.request._data.underweight.should.equal('99');
         done();
+      });
+    });
+
+    it('should be case insensitive for country_name', (done) => {
+      chai.request(server)
+      .post('/api/v1/malnutrition_data')
+      .set('Authorization', process.env.TOKEN)
+      .send({ id: 4,
+        country_name: 'SmelANd',
+        year: '1998',
+        under_5_population: '9999',
+        sample_size: '999',
+        severe_wasting: '99',
+        wasting: '9',
+        overweight: '99',
+        stunting: '99',
+        underweight: '99' })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.text.should.equal('Malnutrition data recorded in database');
+        chai.request(server)
+        .get('/api/v1/malnutrition_data')
+        .end((err, response) => {
+          arrayContains(response, 'country_name', 'SMELAND').should.include(true);
+          arrayContains(response, 'year', '1998').should.include(true);
+          arrayContains(response, 'under_5_population', '9999').should.include(true);
+          arrayContains(response, 'sample_size', '999').should.include(true);
+          arrayContains(response, 'severe_wasting', '99').should.include(true);
+          arrayContains(response, 'wasting', '9').should.include(true);
+          arrayContains(response, 'overweight', '99').should.include(true);
+          arrayContains(response, 'stunting', '99').should.include(true);
+          arrayContains(response, 'underweight', '99').should.include(true);
+          done();
+        });
       });
     });
 
