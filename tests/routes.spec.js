@@ -39,17 +39,17 @@ describe('API Routes', () => {
         response.body.length.should.equal(3);
         arrayContains(response, 'id', 1).should.include(true);
         arrayContains(response, 'name', 'SMELAND').should.include(true);
-        arrayContains(response, 'iso_code', 'sme').should.include(true);
+        arrayContains(response, 'iso_code', 'SME').should.include(true);
         arrayContains(response, 'region', 'jungleland').should.include(true);
         arrayContains(response, 'income_group', 'no-money').should.include(true);
         arrayContains(response, 'id', 2).should.include(true);
         arrayContains(response, 'name', 'YUVALAND').should.include(true);
-        arrayContains(response, 'iso_code', 'yuv').should.include(true);
+        arrayContains(response, 'iso_code', 'YUV').should.include(true);
         arrayContains(response, 'region', 'coconut-trees').should.include(true);
         arrayContains(response, 'income_group', 'rich').should.include(true);
         arrayContains(response, 'id', 3).should.include(true);
         arrayContains(response, 'name', 'DEXLAND').should.include(true);
-        arrayContains(response, 'iso_code', 'dex').should.include(true);
+        arrayContains(response, 'iso_code', 'DEX').should.include(true);
         arrayContains(response, 'region', 'bushes').should.include(true);
         arrayContains(response, 'income_group', 'bones').should.include(true);
         done();
@@ -96,13 +96,26 @@ describe('API Routes', () => {
       });
     });
 
-    it('should be able to filter countries by region', (done) => {
+    it('should be able to filter countries by iso_code', (done) => {
       chai.request(server)
-      .get('/api/v1/countries?region=jungleland')
+      .get('/api/v1/countries?iso_code=SME')
       .end((err, response) => {
         arrayContains(response, 'id', 1).should.include(true);
         arrayContains(response, 'name', 'SMELAND').should.include(true);
-        arrayContains(response, 'iso_code', 'sme').should.include(true);
+        arrayContains(response, 'iso_code', 'SME').should.include(true);
+        arrayContains(response, 'region', 'jungleland').should.include(true);
+        arrayContains(response, 'income_group', 'no-money').should.include(true);
+        done();
+      });
+    });
+
+    it('should be able to filter countries by iso_code case insensitively', (done) => {
+      chai.request(server)
+      .get('/api/v1/countries?iso_code=SmE')
+      .end((err, response) => {
+        arrayContains(response, 'id', 1).should.include(true);
+        arrayContains(response, 'name', 'SMELAND').should.include(true);
+        arrayContains(response, 'iso_code', 'SME').should.include(true);
         arrayContains(response, 'region', 'jungleland').should.include(true);
         arrayContains(response, 'income_group', 'no-money').should.include(true);
         done();

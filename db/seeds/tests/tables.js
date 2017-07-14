@@ -3,9 +3,9 @@ const configuration = require('../../../knexfile')[environment];
 const database = require('knex')(configuration);
 
 const countryData = [
-  { id: 1, name: 'SMELAND', iso_code: 'sme', region: 'jungleland', income_group: 'no-money' },
-  { id: 2, name: 'YUVALAND', iso_code: 'yuv', region: 'coconut-trees', income_group: 'rich' },
-  { id: 3, name: 'DEXLAND', iso_code: 'dex', region: 'bushes', income_group: 'bones' },
+  { id: 1, name: 'SMELAND', iso_code: 'SME', region: 'jungleland', income_group: 'no-money' },
+  { id: 2, name: 'YUVALAND', iso_code: 'YUV', region: 'coconut-trees', income_group: 'rich' },
+  { id: 3, name: 'DEXLAND', iso_code: 'DEX', region: 'bushes', income_group: 'bones' },
 ];
 
 const countriesData = (knex) => {

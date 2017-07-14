@@ -4,9 +4,11 @@ const database = require('knex')(configuration);
 
 const getOneResource = (req, res) => {
   const path = req.route.path.substring(1);
-  const { region } = req.query;
-  if (region) {
-    database(`${path}`).where({ region }).select()
+  let { iso_code } = req.query;
+
+  if (iso_code) {
+    iso_code = iso_code.toUpperCase();
+    database(`${path}`).where({ iso_code }).select()
     .then((data) => {
       data.length ? res.status(200).json(data) : res.status(404).send('Data was not found');
     })
