@@ -1,5 +1,4 @@
 process.env.NODE_ENV = 'test';
-process.env.TOKEN = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJVU0VSTkFNRSI6InN2ZW4iLCJQQVNTV09SRCI6InBlYXZsZXJkZW4ifQ.SO-V6i8bwtVk5AdVgQmOo5gJ6UbdzoNynepKVFXuHRU';
 const environment = 'test';
 const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
