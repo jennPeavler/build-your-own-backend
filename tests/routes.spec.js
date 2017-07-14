@@ -376,6 +376,28 @@ describe('API Routes', () => {
       });
     });
 
+    it('should be case insesnsitive', (done) => {
+      chai.request(server)
+      .patch('/api/v1/countries/SmElaNd')
+      .set('Authorization', process.env.TOKEN)
+      .send({ region: 'pinland' })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.text.should.equal('Data updated');
+        response.request._data.should.have.property('region');
+        response.request._data.region.should.equal('pinland');
+        chai.request(server)
+        .get('/api/v1/countries')
+        .end((err, response) => {
+          arrayContains(response, 'id', 1).should.include(true);
+          arrayContains(response, 'name', 'SMELAND').should.include(true);
+          arrayContains(response, 'region', 'jungleland').should.not.include(true);
+          arrayContains(response, 'region', 'pinland').should.include(true);
+          done();
+        });
+      });
+    });
+
     it('should return a 404 and a helpful message if user does not have authorization to update country data', (done) => {
       chai.request(server)
       .patch('/api/v1/countries/SMELAND')
@@ -393,6 +415,30 @@ describe('API Routes', () => {
     it('should update malnutrition data point if user has authorization and hits enpoint', (done) => {
       chai.request(server)
       .patch('/api/v1/malnutrition_data/SMELAND/1980')
+      .set('Authorization', process.env.TOKEN)
+      .send({ under_5_population: '3333' })
+      .end((err, response) => {
+        response.should.have.status(201);
+        response.text.should.equal('Data updated');
+        response.request._data.should.have.property('under_5_population');
+        response.request._data.under_5_population.should.equal('3333');
+        chai.request(server)
+        .get('/api/v1/countries/malnutrition_data/SMELAND')
+        .end((err, response) => {
+          response.should.have.status(200);
+          response.body.length.should.equal(1);
+          response.body[0].id.should.equal(1);
+          response.body[0].country_name.should.equal('SMELAND');
+          response.body[0].under_5_population.should.not.equal('3000');
+          response.body[0].under_5_population.should.equal('3333');
+          done();
+        });
+      });
+    });
+
+    it('should be case insensitive', (done) => {
+      chai.request(server)
+      .patch('/api/v1/malnutrition_data/SmElAnD/1980')
       .set('Authorization', process.env.TOKEN)
       .send({ under_5_population: '3333' })
       .end((err, response) => {

@@ -3,7 +3,8 @@ const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
 const patchCountry = (req, res) => {
-  const { name } = req.params;
+  let { name } = req.params;
+  name = name.toUpperCase();
   const updates = Object.keys(req.body);
 
   if (!req.body.name) {
@@ -35,8 +36,11 @@ const patchCountry = (req, res) => {
 };
 
 const patchMalnutritionData = (req, res) => {
-  const { country_name, year } = req.params;
+  const { year } = req.params;
+  let { country_name } = req.params;
+  country_name = country_name.toUpperCase();
   const updates = Object.keys(req.body);
+
   if (!req.body.country_name && !req.body.year) {
     updates.forEach((update) => {
       database('malnutrition_data').where({ country_name, year })
