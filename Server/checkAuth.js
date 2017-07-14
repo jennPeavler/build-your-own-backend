@@ -4,11 +4,11 @@ const jwt = require('jsonwebtoken');
 
 const app = express();
 
-if (!userCreds.CLIENT_SECRET || !userCreds.USERNAME || !userCreds.PASSWORD) {
+if (!process.env.CLIENT_SECRET || !process.env.USERNAME || !process.env.PASSWORD) {
   throw new Error('Make sure you have a CLIENT_SECRET, USERNAME, and PASSWORD in your .env file');
 }
 
-app.set('secretKey', userCreds.CLIENT_SECRET);
+app.set('secretKey', process.env.CLIENT_SECRET);
 const token = jwt.sign('token', app.get('secretKey'));
 
 const checkAuth = (request, response, next) => {

@@ -3,7 +3,7 @@
 module.exports = {
   test: {
     client: 'pg',
-    connection: 'postgres://localhost/child_malnutrition_test',
+    connection: process.env.DATABASE_URL || 'postgres://localhost/child_malnutrition_test',
     migrations: {
       directory: './db/migrations/tests',
     },
@@ -26,18 +26,13 @@ module.exports = {
 
   production: {
     client: 'postgresql',
-    connection: {
-      database: 'my_db',
-      user: 'username',
-      password: 'password',
-    },
-    pool: {
-      min: 2,
-      max: 10,
-    },
+    connection: `${process.env.DATABASE_URL}?ssl=true`,
     migrations: {
-      tableName: 'knex_migrations',
+      directory: './db/migrations',
+    },
+    useNullAsDefault: true,
+    seeds: {
+      directory: './db/seeds/dev',
     },
   },
-
 };
