@@ -448,6 +448,26 @@ describe('API Routes', () => {
       });
     });
 
+    it('should be case insesnsitive', (done) => {
+      chai.request(server)
+      .get('/api/v1/countries')
+      .end((error, response) => {
+        response.body.length.should.equal(3);
+        chai.request(server)
+        .delete('/api/v1/countries/DeXlaNd')
+        .set('Authorization', process.env.TOKEN)
+        .end((err, response) => {
+          response.should.have.status(204);
+          chai.request(server)
+          .get('/api/v1/countries')
+          .end((error, response) => {
+            response.body.length.should.equal(2);
+            done();
+          });
+        });
+      });
+    });
+
     it('should return a 404 and a helpful message if user does not have authorization to delete country data', (done) => {
       chai.request(server)
       .delete('/api/v1/countries/DEXLAND')
@@ -468,6 +488,26 @@ describe('API Routes', () => {
         response.body.length.should.equal(3);
         chai.request(server)
         .delete('/api/v1/malnutrition_data/DEXLAND/2017')
+        .set('Authorization', process.env.TOKEN)
+        .end((err, response) => {
+          response.should.have.status(204);
+          chai.request(server)
+          .get('/api/v1/malnutrition_data')
+          .end((error, response) => {
+            response.body.length.should.equal(2);
+            done();
+          });
+        });
+      });
+    });
+
+    it('should be case insesnsitive', (done) => {
+      chai.request(server)
+      .get('/api/v1/malnutrition_data')
+      .end((error, response) => {
+        response.body.length.should.equal(3);
+        chai.request(server)
+        .delete('/api/v1/malnutrition_data/DeXlAnD/2017')
         .set('Authorization', process.env.TOKEN)
         .end((err, response) => {
           response.should.have.status(204);

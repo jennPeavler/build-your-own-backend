@@ -3,7 +3,8 @@ const configuration = require('../knexfile')[environment];
 const database = require('knex')(configuration);
 
 const deleteCountry = (req, res) => {
-  const { name } = req.params;
+  let { name } = req.params;
+  name = name.toUpperCase();
 
   database('countries').where('name', name).select()
   .then((country) => {
@@ -17,7 +18,9 @@ const deleteCountry = (req, res) => {
 };
 
 const deleteMalnutritionData = (req, res) => {
-  const { country_name, year } = req.params;
+  const { year } = req.params;
+  let { country_name } = req.params;
+  country_name = country_name.toUpperCase();
 
   database('malnutrition_data').where({ country_name, year }).select()
   .then((dataPoint) => {
