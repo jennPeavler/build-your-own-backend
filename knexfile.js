@@ -3,7 +3,7 @@
 module.exports = {
   test: {
     client: 'pg',
-    connection: 'postgres://localhost/child_malnutrition_test',
+    connection: 'postgres://localhost/child_malnutrition_test' || process.env.DATABASE_URL,
     migrations: {
       directory: './db/migrations/tests',
     },
