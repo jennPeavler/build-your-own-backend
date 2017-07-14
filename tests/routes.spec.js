@@ -304,7 +304,19 @@ describe('API Routes', () => {
       });
     });
 
-    it('should return a 404 and a helpful message if user does not have authorization to post country', (done) => {
+    it('should not allow null country data and will return a 422 and helpful error message if user does not include all necessary data in post request', (done) => {
+      chai.request(server)
+      .post('/api/v1/countries')
+      .set('Authorization', process.env.TOKEN)
+      .send({ name: 'george' })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.text.should.equal('Unable to record country into table.  Missing data in post request.');
+        done();
+      });
+    });
+
+    it('should return a 403 and a helpful message if user does not have authorization to post country', (done) => {
       chai.request(server)
       .post('/api/v1/countries')
       .send({ id: 5,
@@ -395,6 +407,18 @@ describe('API Routes', () => {
           arrayContains(response, 'underweight', '99').should.include(true);
           done();
         });
+      });
+    });
+
+    it('should not allow null country_name or iso_code data and will return a 422 and helpful error message if user does not include all necessary data in post request', (done) => {
+      chai.request(server)
+      .post('/api/v1/malnutrition_data')
+      .set('Authorization', process.env.TOKEN)
+      .send({ wasting: 'george' })
+      .end((err, response) => {
+        response.should.have.status(422);
+        response.text.should.equal('Unable to record malnutrition data into table.  Missing data in post request.');
+        done();
       });
     });
 
